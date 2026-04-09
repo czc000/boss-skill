@@ -1,0 +1,21 @@
+# BOSS Operational Constraints
+
+- Preserving the logged-in BOSS session is more important than completing the current batch.
+- Never run parallel operations against BOSS chats.
+- Never frequently reopen the chat page or re-navigate for each contact.
+- Once a stable logged-in BOSS chat tab is chosen, bind to that exact tab.
+- `opencli doctor` is not a perfect readiness oracle for BOSS runs. `No daemon connected` before the first real command can be normal, and a successful host-side `opencli boss ...` read command is stronger evidence that the path is usable.
+- If a BOSS processing script fails with `opencli daemon is not running`, first bootstrap with a minimal host-side read like `opencli boss chatlist --limit 1 -f json`, then rerun the script.
+- Never mix control chains in one BOSS run:
+  - `opencli boss send`
+  - `opencli boss-extra goto/click-chat/exec`
+  - raw daemon-client `navigate/exec`
+- If the controlled page lands on homepage or `bticket`, stop immediately.
+- If session safety and task completion conflict, stop and report counts.
+- Always check filter status first.
+- After switching chats, do not trust a fixed sleep alone; confirm the target contact row is actually active before treating the current chat DOM as evidence for that contact.
+- Only use the visible current conversation panel as evidence. Hidden panels, stale panels, side-list previews, and whole-page visible text can belong to another contact.
+- For `resume-already-requested`, trust only current-conversation evidence such as `简历请求已发送` or the recruiter request text appearing in the active chat body. Do not infer it from side-list preview text.
+- Do not treat online resume cards alone as already handled.
+- For attachment-resume approval, `clicked: true` on `同意` is not enough; re-read the conversation state to verify the pending approval is actually gone.
+- On request-resume flows, send the recruiter message first, verify it appears, then click `求简历`.

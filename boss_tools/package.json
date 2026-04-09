@@ -1,0 +1,10 @@
+{
+  "name": "boss-tools",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "scan:today": "node src/commands/scan-today.mjs",
+    "process:today": "node src/commands/process-today.mjs"
+  }
+}
