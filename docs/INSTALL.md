@@ -1,43 +1,44 @@
 # Installation
 
-## Dependencies
+## Model
 
-Required:
-- Node.js 20+
-- `opencli`
-- opencli Browser Bridge extension
-- Chrome or Chromium
-- an authenticated BOSS Zhipin browser session
+This repository is lightweight by design:
+- Codex should check the machine first
+- Codex should auto-install CLI dependencies when possible
+- Codex should stop and ask for manual browser steps when required
+
+Manual-only requirements:
+- Browser Bridge extension installed/enabled
+- authenticated BOSS Zhipin browser session
 
 ## Fresh Machine Setup
 
-1. Install Node.js.
-2. Install opencli:
+1. Install Node.js 20+.
+2. Clone this repository.
+3. Run one of these:
+
+   Linux/macOS:
 
    ```bash
-   npm install -g @jackwener/opencli
+   bash scripts/bootstrap.sh
    ```
 
-3. Install the Browser Bridge extension in Chrome/Chromium.
-4. Log into BOSS Zhipin in the same browser profile you intend to automate.
-5. From the host shell, verify:
+   Cross-platform:
 
    ```bash
-   opencli doctor
+   node scripts/bootstrap.mjs
    ```
 
-6. If the result is ambiguous, verify the daemon directly:
+   Windows PowerShell:
 
-   ```bash
-   curl -H 'X-OpenCLI: 1' http://127.0.0.1:19825/status
+   ```powershell
+   powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
    ```
 
-7. Clone this repository.
-8. Run:
-
-   ```bash
-   bash scripts/install.sh
-   ```
+4. If bootstrap reports manual steps:
+   - install/enable Browser Bridge in Chrome/Chromium
+   - log into BOSS Zhipin in the same browser profile you intend to automate
+5. Run bootstrap again until preflight is clean.
 
 ## Validation
 
@@ -47,7 +48,7 @@ From `boss_tools/`:
 npm test
 ```
 
-When browser connectivity is healthy:
+When bootstrap / preflight reports the environment is ready:
 
 ```bash
 node src/commands/scan-today.mjs

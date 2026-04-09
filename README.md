@@ -10,53 +10,45 @@ This repository packages:
 
 ## What This Repo Assumes
 
-This repo does not replace `opencli`.
+This repo does not bundle the browser extension or BOSS login state.
 
-Users are expected to install and configure these dependencies themselves:
-- Node.js 20+
-- `opencli`
-- opencli Browser Bridge extension
-- Chrome or Chromium
+It is designed so Codex can:
+- detect missing CLI dependencies
+- auto-install `opencli` when possible
+- install the skill into the local Codex skills directory
+- tell the user when a manual browser step is still required
+
+Manual-only requirements:
+- Browser Bridge extension installed/enabled
 - a valid logged-in BOSS Zhipin chat session in the browser
 
 ## Install
 
-### 1. Install `opencli`
+Recommended entrypoints:
 
-```bash
-npm install -g @jackwener/opencli
-```
+- Linux/macOS:
 
-### 2. Install the Browser Bridge extension
+  ```bash
+  bash scripts/bootstrap.sh
+  ```
 
-- Download the extension build from the opencli release page.
-- Open `chrome://extensions/`
-- Enable Developer Mode.
-- Load the unpacked extension.
+- Cross-platform / Codex-friendly:
 
-### 3. Verify host browser connectivity
+  ```bash
+  node scripts/bootstrap.mjs
+  ```
 
-Run this on the host environment, not inside a sandboxed network namespace:
+- Windows PowerShell:
 
-```bash
-opencli doctor
-```
+  ```powershell
+  powershell -ExecutionPolicy Bypass -File .\scripts\bootstrap.ps1
+  ```
 
-If `opencli doctor` and the visible browser state disagree, verify the daemon directly:
-
-```bash
-curl -H 'X-OpenCLI: 1' http://127.0.0.1:19825/status
-```
-
-### 4. Install the skill
-
-From the repository root:
-
-```bash
-bash scripts/install.sh
-```
-
-This installs a rendered copy of `skills/boss-daily-followup/SKILL.md` into `~/.agents/skills/boss-daily-followup/`.
+`bootstrap` will:
+- check `node`, `npm`, and `opencli`
+- auto-install `opencli` when possible
+- install the rendered skill
+- report manual browser steps still required
 
 ## Repository Layout
 
@@ -64,11 +56,11 @@ This installs a rendered copy of `skills/boss-daily-followup/SKILL.md` into `~/.
 - `skills/`: skill template(s) to install into Codex/Codex-compatible environments
 - `docs/`: setup, SOP, troubleshooting, migration notes
 - `memory/`: sanitized BOSS-specific operating memory
-- `scripts/`: helper scripts such as skill installation
+- `scripts/`: bootstrap, preflight, and install helpers
 
 ## Daily Use
 
-Run these from `boss_tools/` after host-side `opencli doctor` is healthy:
+Run these from `boss_tools/` after bootstrap reports the environment is ready:
 
 ```bash
 node src/commands/scan-today.mjs

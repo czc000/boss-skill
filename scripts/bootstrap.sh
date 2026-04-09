@@ -2,4 +2,4 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-node "${SCRIPT_DIR}/install-skill.mjs" "$@"
+node "${SCRIPT_DIR}/bootstrap.mjs" "$@"
