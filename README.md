@@ -65,6 +65,7 @@ Run these from `boss_tools/` after bootstrap reports the environment is ready:
 ```bash
 node src/commands/scan-today.mjs
 node src/commands/process-today.mjs
+node src/commands/reply-needs.mjs draft
 ```
 
 ## Privacy

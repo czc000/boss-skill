@@ -1,5 +1,5 @@
 import { checkDaemonStatus, sendCommand, wrapForEval } from "./opencli-daemon.mjs";
-import { canScrollChatList, isLikelyActiveChatRow, pickConversationText } from "./chat-ui-state.mjs";
+import { canScrollChatList, detectMessageRoleFromMarkup, isLikelyActiveChatRow, pickConversationText } from "./chat-ui-state.mjs";
 
 const CHAT_URL = "https://www.zhipin.com/web/chat/index";
 
@@ -189,6 +189,12 @@ export class BossPageSession {
             left: Math.round(rect.left),
           };
         });
+      const messageItems = Array.from(document.querySelectorAll('.chat-message-list .message-item')).map(el => ({
+        role: '',
+        text: (el.innerText || '').trim(),
+        className: String(el.className || ''),
+        html: el.outerHTML || '',
+      })).filter(item => item.text);
       const visibleNodes = Array.from(document.querySelectorAll('button,input,span,div,a'))
         .filter(el => el.offsetParent !== null);
       const visibleTexts = visibleNodes
@@ -206,6 +212,7 @@ export class BossPageSession {
       return {
         href: location.href,
         conversationCandidates,
+        messageItems,
         visibleTexts,
         disabledTexts,
         editorText: editor ? ((editor.value || editor.textContent || '').trim()) : '',
@@ -214,6 +221,10 @@ export class BossPageSession {
 
     return {
       ...snapshot,
+      messageItems: (snapshot?.messageItems || []).map((item) => ({
+        ...item,
+        role: detectMessageRoleFromMarkup(item.html),
+      })).filter((item) => item.role && item.text),
       conversationText: pickConversationText(snapshot?.conversationCandidates || []),
     };
   }

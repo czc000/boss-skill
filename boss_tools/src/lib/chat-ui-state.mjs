@@ -1,4 +1,7 @@
 const ACTIVE_CLASS_PATTERN = /\b(active|selected|current|focus|focused|checked|choose|chosen|on)\b/i;
+const SELF_MESSAGE_PATTERN = /\bitem-myself\b/i;
+const FRIEND_MESSAGE_PATTERN = /\bitem-friend\b/i;
+const SYSTEM_MESSAGE_PATTERN = /\bitem-system\b/i;
 
 export function pickConversationText(candidates = []) {
   const normalized = candidates
@@ -52,4 +55,12 @@ export function canScrollChatList(state = {}) {
   const scrollHeight = Number(state?.scrollHeight || 0);
 
   return className.includes("user-list") && scrollHeight > clientHeight + 8;
+}
+
+export function detectMessageRoleFromMarkup(markup = "") {
+  const text = String(markup || "");
+  if (SELF_MESSAGE_PATTERN.test(text)) return "self";
+  if (FRIEND_MESSAGE_PATTERN.test(text)) return "friend";
+  if (SYSTEM_MESSAGE_PATTERN.test(text)) return "system";
+  return "";
 }

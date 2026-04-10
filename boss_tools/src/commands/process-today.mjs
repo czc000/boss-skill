@@ -36,6 +36,7 @@ try {
       let verdict = classifyConversationState({
         friend,
         conversationText: dom.conversationText,
+        messageItems: dom.messageItems,
         visibleTexts: dom.visibleTexts,
         disabledTexts: dom.disabledTexts,
         requestText: REQUEST_TEXT,
@@ -98,6 +99,7 @@ try {
       verdict = classifyConversationState({
         friend,
         conversationText: dom.conversationText,
+        messageItems: dom.messageItems,
         visibleTexts: dom.visibleTexts,
         disabledTexts: dom.disabledTexts,
         requestText: REQUEST_TEXT,

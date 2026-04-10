@@ -1,5 +1,4 @@
 import path from "node:path";
-import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { classifyConversationState, shouldIncludeTodayContact } from "../lib/classify.mjs";
 import { REQUEST_TEXT } from "../lib/config.mjs";
@@ -41,6 +40,7 @@ try {
       const verdict = classifyConversationState({
         friend,
         conversationText: dom.conversationText,
+        messageItems: dom.messageItems,
         visibleTexts: dom.visibleTexts,
         disabledTexts: dom.disabledTexts,
         requestText: REQUEST_TEXT,

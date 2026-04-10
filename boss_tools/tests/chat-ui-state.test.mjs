@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 
 import {
   canScrollChatList,
+  detectMessageRoleFromMarkup,
   isLikelyActiveChatRow,
   pickConversationText,
 } from "../src/lib/chat-ui-state.mjs";
@@ -92,5 +93,26 @@ test("canScrollChatList rejects non-scrollable containers", () => {
       scrollHeight: 78,
     }),
     false,
+  );
+});
+
+test("detectMessageRoleFromMarkup detects self messages from nested markup", () => {
+  assert.equal(
+    detectMessageRoleFromMarkup('<div class="message-item"><div class="item-myself clearfix"><div class="text">hello</div></div></div>'),
+    "self",
+  );
+});
+
+test("detectMessageRoleFromMarkup detects friend messages from nested markup", () => {
+  assert.equal(
+    detectMessageRoleFromMarkup('<div class="message-item"><div><div class="item-friend">hi</div></div></div>'),
+    "friend",
+  );
+});
+
+test("detectMessageRoleFromMarkup detects system messages from nested markup", () => {
+  assert.equal(
+    detectMessageRoleFromMarkup('<div class="message-item"><div class="item-system" source="chat">简历请求已发送</div></div>'),
+    "system",
   );
 });

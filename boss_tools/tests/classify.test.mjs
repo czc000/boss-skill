@@ -30,6 +30,9 @@ test("treats DOM resume request system text as already requested", () => {
   const result = classifyConversationState({
     friend: { isFiltered: false, name: "A" },
     conversationText: "15:13\n简历请求已发送\n",
+    messageItems: [
+      { role: "system", text: "简历请求已发送" },
+    ],
     visibleTexts: [],
   });
 
@@ -125,6 +128,10 @@ test("flags manual reply needed when candidate asks a follow-up after resume req
   const result = classifyConversationState({
     friend: { isFiltered: false, name: "A" },
     conversationText: "方便先发一份最新简历给我吗？\n好的，岗位具体是做什么的，薪资大概多少呢",
+    messageItems: [
+      { role: "self", text: "你好，感谢你的关注，方便先发一份最新简历给我吗？" },
+      { role: "friend", text: "好的，岗位具体是做什么的，薪资大概多少呢" },
+    ],
     visibleTexts: [],
   });
 
@@ -133,6 +140,113 @@ test("flags manual reply needed when candidate asks a follow-up after resume req
     reason: "needs-reply-after-request",
     action: "reply-manually",
     replySnippet: "好的，岗位具体是做什么的，薪资大概多少呢",
+  });
+});
+
+test("does not treat candidate asking for a resume as our own resume request", () => {
+  const result = classifyConversationState({
+    friend: { isFiltered: false, name: "A" },
+    conversationText: "您好，您的职位和我的工作经历非常匹配，可以发您一份简历看看吗？",
+    messageItems: [
+      { role: "friend", text: "您好，您的职位和我的工作经历非常匹配，可以发您一份简历看看吗？" },
+    ],
+    visibleTexts: [],
+  });
+
+  assert.deepEqual(result, {
+    status: "act",
+    reason: "request-resume",
+    action: "request",
+  });
+});
+
+test("does not treat our own outbound follow-up as a candidate reply need", () => {
+  const result = classifyConversationState({
+    friend: { isFiltered: false, name: "A" },
+    conversationText: "你好，感谢你的关注，方便先发一份最新简历给我吗？\n方便什么时候线上会议面试和我们技术交流下吗",
+    messageItems: [
+      { role: "self", text: "你好，感谢你的关注，方便先发一份最新简历给我吗？" },
+      { role: "self", text: "方便什么时候线上会议面试和我们技术交流下吗" },
+    ],
+    visibleTexts: [],
+  });
+
+  assert.deepEqual(result, {
+    status: "skip",
+    reason: "resume-already-requested",
+  });
+});
+
+test("does not require manual reply when the latest meaningful message after our request is from us", () => {
+  const result = classifyConversationState({
+    friend: { isFiltered: false, name: "A" },
+    conversationText: "你好，感谢你的关注，方便先发一份最新简历给我吗？\n什么时候方便线上面试吗\n我们会先内部评估，合适会再联系你",
+    messageItems: [
+      { role: "self", text: "你好，感谢你的关注，方便先发一份最新简历给我吗？" },
+      { role: "friend", text: "什么时候方便线上面试吗" },
+      { role: "self", text: "我们会先内部评估，合适会再联系你" },
+    ],
+    visibleTexts: [],
+  });
+
+  assert.deepEqual(result, {
+    status: "skip",
+    reason: "resume-already-requested",
+  });
+});
+
+test("requires manual reply when the latest meaningful message after our request is from the candidate", () => {
+  const result = classifyConversationState({
+    friend: { isFiltered: false, name: "A" },
+    conversationText: "你好，感谢你的关注，方便先发一份最新简历给我吗？\n可以的\n什么时候方便线上面试吗",
+    messageItems: [
+      { role: "self", text: "你好，感谢你的关注，方便先发一份最新简历给我吗？" },
+      { role: "friend", text: "可以的" },
+      { role: "friend", text: "什么时候方便线上面试吗" },
+    ],
+    visibleTexts: [],
+  });
+
+  assert.deepEqual(result, {
+    status: "skip",
+    reason: "needs-reply-after-request",
+    action: "reply-manually",
+    replySnippet: "什么时候方便线上面试吗",
+  });
+});
+
+test("does not require manual reply when a later system workflow state already advanced the conversation", () => {
+  const result = classifyConversationState({
+    friend: { isFiltered: false, name: "A" },
+    conversationText: "你好，感谢你的关注，方便先发一份最新简历给我吗？\n什么时候方便线上面试吗\n邀请对方面试",
+    messageItems: [
+      { role: "self", text: "你好，感谢你的关注，方便先发一份最新简历给我吗？" },
+      { role: "friend", text: "什么时候方便线上面试吗" },
+      { role: "system", text: "邀请对方面试" },
+    ],
+    visibleTexts: [],
+  });
+
+  assert.deepEqual(result, {
+    status: "skip",
+    reason: "resume-already-requested",
+  });
+});
+
+test("does not require manual reply when the latest candidate message is only a file upload", () => {
+  const result = classifyConversationState({
+    friend: { isFiltered: false, name: "A" },
+    conversationText: "你好，感谢你的关注，方便先发一份最新简历给我吗？\n孙悦-行政人事企培专员-5年经验-福田.pdf",
+    messageItems: [
+      { role: "self", text: "你好，感谢你的关注，方便先发一份最新简历给我吗？" },
+      { role: "friend", text: "孙悦-行政人事企培专员-5年经验-福田.pdf" },
+    ],
+    visibleTexts: [],
+  });
+
+  assert.deepEqual(result, {
+    status: "skip",
+    reason: "resume-already-requested",
   });
 });
 
