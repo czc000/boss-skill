@@ -31,6 +31,11 @@
    ```bash
    node src/commands/process-today.mjs
    ```
+4. If the summary reports `needs_reply_count > 0`, draft replies:
+
+   ```bash
+   node src/commands/reply-needs.mjs draft
+   ```
 
 ## Safety Rules
 
@@ -40,9 +45,15 @@
 - Stay on one stable `tabId` per run.
 - Do not mix control chains in one run.
 - Filter `isFiltered === true` contacts before conversation-level logic.
+- Draft templated follow-up replies through `reply-needs.mjs` before sending them.
 
 ## Resume Handling
 
 - `简历请求已发送` means already handled.
 - Attachment resume handling should treat actual file/handled evidence as stronger than stale historical prompt text.
 - Do not treat online resume cards alone as already handled.
+
+## Reply Handling
+
+- Only safe template cases should be sent from the reply workflow.
+- Technical-fit, portfolio, compensation, and role-detail questions stay manual.

@@ -7,6 +7,8 @@ Reusable local CLI helpers for BOSS Zhipin operations.
 - `npm test`
 - `node src/commands/scan-today.mjs`
 - `node src/commands/process-today.mjs`
+- `node src/commands/reply-needs.mjs draft`
+- `node src/commands/reply-needs.mjs send --plan-file /path/to/reply-plan.json`
 
 ## Output
 
@@ -18,6 +20,7 @@ Reusable local CLI helpers for BOSS Zhipin operations.
 - Uses one stable `tabId` per run
 - Filters `isFiltered === true` before conversation work
 - Requires verification after send / request / agree actions
+- Separates `needs_reply` drafting from direct batch processing
 
 ## Troubleshooting
 

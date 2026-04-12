@@ -19,6 +19,12 @@ The opencli daemon auto-exits after idle time. Restart it with:
 opencli doctor
 ```
 
+If that still fails, bootstrap the host-side path with:
+
+```bash
+opencli boss chatlist --limit 1 -f json
+```
+
 Then rerun the scan.
 
 ## Attachment approval is shown but already handled

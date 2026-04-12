@@ -8,6 +8,17 @@ This repository packages:
 - sanitized SOP and memory documents
 - install guidance for a fresh machine
 
+## Current Canonical Surface
+
+The current portable workflow has one canonical lane:
+
+- Skill template: `skills/boss-daily-followup/SKILL.md`
+- Installed skill target: `~/.agents/skills/boss-daily-followup/SKILL.md`
+- Backing memory: `memory/boss-operational-constraints.md`, `memory/boss-lessons-learned.md`
+- Primary tools: `boss_tools/src/commands/scan-today.mjs`, `process-today.mjs`, `reply-needs.mjs`
+
+See `docs/ACTIVE_SURFACE.md` for the alignment contract between skill, memory, and tools.
+
 ## What This Repo Assumes
 
 This repo does not bundle the browser extension or BOSS login state.
@@ -67,6 +78,8 @@ node src/commands/scan-today.mjs
 node src/commands/process-today.mjs
 node src/commands/reply-needs.mjs draft
 ```
+
+Use `reply-needs.mjs` only when the scan or process summary reports `needs_reply_count > 0`.
 
 ## Privacy
 

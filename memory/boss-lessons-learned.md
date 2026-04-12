@@ -23,3 +23,9 @@
 - `resume-already-requested` must be based on the active conversation body, not on side-list preview text or whole-page visible text.
 - When switching chats, a fixed sleep is not enough; first confirm the target row is actually active, then read the conversation.
 - Hidden or stale conversation panels can contain another contact's text and must not be used as evidence.
+
+## Reply Handling
+
+- Not every post-request candidate message should be auto-replied to.
+- Safe templated replies are currently limited to interview scheduling, contact-exchange, and generic progress-follow-up prompts.
+- Technical-fit, compensation, portfolio, and role-detail questions should stay in manual review.

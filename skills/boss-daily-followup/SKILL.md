@@ -5,6 +5,11 @@ description: Use when handling BOSS Zhipin recruiter conversations from a specif
 
 # BOSS Daily Follow-Up
 
+Back this skill with:
+
+- `__BOSS_SKILL_ROOT__/memory/boss-operational-constraints.md`
+- `__BOSS_SKILL_ROOT__/memory/boss-lessons-learned.md`
+
 Run:
 
   ```bash
@@ -72,6 +77,7 @@ Read state first, and prefer the lightest path:
 - Preferred reusable toolchain for agent runs:
   - `__BOSS_SKILL_ROOT__/boss_tools/src/commands/scan-today.mjs`
   - `__BOSS_SKILL_ROOT__/boss_tools/src/commands/process-today.mjs`
+  - `__BOSS_SKILL_ROOT__/boss_tools/src/commands/reply-needs.mjs`
   - use these first instead of rewriting ad-hoc one-off scripts
   - after running them, read the generated summary/log files and report the results to the user
   - if they fail, debug from their structured logs before inventing a new workflow
@@ -145,6 +151,7 @@ Read state first, and prefer the lightest path:
   5. Is there a pending attachment-resume approval that is not yet handled?
   6. Has an attachment resume already been accepted/handled?
   7. If none of the above, send text first, verify it appears, then click 求简历 + click 确定.
+  8. If the summary shows `needs_reply_count > 0`, draft replies with `reply-needs.mjs draft` before sending anything manual.
 
   Important:
 
@@ -272,7 +279,16 @@ Read state first, and prefer the lightest path:
   - `同意`: exact visible text match
   - click via exact-text node + `mousedown`, `mouseup`, `click`
 
-  ## Verification Rules
+## Reply Workflow
+
+If the current batch surfaces candidate follow-up questions after we already requested a resume:
+
+1. Run `__BOSS_SKILL_ROOT__/boss_tools/src/commands/reply-needs.mjs draft`
+2. Review the generated plan
+3. Only send replies that are clearly safe template cases
+4. Keep technical-fit, portfolio, compensation, or role-detail questions in manual review
+
+## Verification Rules
 
   Never trust the page alone. After each action, verify with fresh conversation state.
 

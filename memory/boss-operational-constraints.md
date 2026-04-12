@@ -19,3 +19,5 @@
 - Do not treat online resume cards alone as already handled.
 - For attachment-resume approval, `clicked: true` on `同意` is not enough; re-read the conversation state to verify the pending approval is actually gone.
 - On request-resume flows, send the recruiter message first, verify it appears, then click `求简历`.
+- If a batch surfaces `needs-reply-after-request`, use `reply-needs.mjs draft` before sending any templated reply.
+- Keep compensation, role-detail, technical-fit, and portfolio-review questions in manual review rather than auto-sending.
