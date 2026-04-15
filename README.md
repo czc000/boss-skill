@@ -18,6 +18,7 @@ The current portable workflow has one canonical lane:
 - Primary tools: `boss_tools/src/commands/scan-today.mjs`, `process-today.mjs`, `reply-needs.mjs`
 
 See `docs/ACTIVE_SURFACE.md` for the alignment contract between skill, memory, and tools.
+See `docs/PORTABILITY_AND_SELF_DEBUG.md` for environment-drift notes and self-debug guidance when a new machine behaves differently.
 
 ## What This Repo Assumes
 

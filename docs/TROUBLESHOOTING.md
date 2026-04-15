@@ -1,5 +1,9 @@
 # Troubleshooting
 
+For environment-drift and first-run-on-Windows issues, also read:
+
+- `docs/PORTABILITY_AND_SELF_DEBUG.md`
+
 ## `opencli doctor` says not connected
 
 - Run it on the host environment, not in a sandboxed namespace.
@@ -35,3 +39,16 @@ Current logic treats these as already handled when there is stronger evidence su
 - disabled `同意`
 - attachment file present in conversation
 - recruiter acknowledgement such as `简历我们有收到了`
+
+## New machine works differently even though the workflow still makes sense
+
+If the workflow logic still looks right but the code fails on a different machine, browser, or `opencli` build, check:
+
+- `docs/PORTABILITY_AND_SELF_DEBUG.md`
+
+The most common causes are:
+
+- `opencli` response-shape drift such as `tabId` vs `page`
+- chat-list DOM drift such as no legacy `.user-list`
+- lazy-loading / retry budget being too small
+- side effects not being followed by immediate re-classification
